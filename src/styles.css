@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;900&display=swap');
+
+:root {
+  /* Colors */
+  --clr-primary: #D32726; /* Exact Logo Red */
+  --clr-primary-light: #E83F3E; /* Lighter matching Red */
+  --clr-secondary: #111111; /* Dark/Black */
+  --clr-dark: #111111;
+  --clr-light: #F8F9FA;
+  --clr-white: #FFFFFF;
+  
+  /* Typography */
+  --ff-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --ff-display: 'Outfit', system-ui, sans-serif;
+  
+  /* Spacing */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 5rem;
+  
+  /* Radius & Shadows */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+}
+
+/* CSS Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--ff-sans);
+  background-color: var(--clr-light);
+  color: var(--clr-dark);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50vw;
+  height: 50vh;
+  max-width: 600px;
+  background-image: url('/buerenLogo.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.12;
+  z-index: -1;
+  pointer-events: none;
+}
+
+main {
+  flex: 1;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--ff-display);
+  line-height: 1.2;
+  margin-bottom: var(--space-sm);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+.container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+.text-center { text-align: center; }
+.mt-lg { margin-top: var(--space-lg); }
+.mb-lg { margin-bottom: var(--space-lg); }
+.py-xl { padding: var(--space-xl) 0; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--clr-primary);
+  color: var(--clr-dark);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: var(--clr-primary-light);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background-color: var(--clr-dark);
+  color: var(--clr-white);
+}
+
+.btn-secondary:hover {
+  background-color: #e5b327;
+}
+
+/* Hero Section */
+.hero {
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8)), url('/heroPicture.jpeg') no-repeat center center/cover;
+  background-attachment: fixed;
+  color: var(--clr-white);
+  padding: var(--space-2xl) 0;
+  text-align: center;
+  min-height: 90vh;
+  display: flex;
+  align-items: flex-end;
+}
+
+.hero .container {
+  padding-bottom: 10vh;
+  width: 100%;
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  margin-bottom: var(--space-md);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.hero p {
+  font-size: 1.25rem;
+  max-width: 600px;
+  margin: 0 auto var(--space-lg);
+  opacity: 0.9;
+}

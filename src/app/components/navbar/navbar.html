@@ -1,0 +1,33 @@
+<header class="navbar">
+    <div class="container nav-container">
+        <!-- Logo -->
+        <a routerLink="/" class="nav-logo">
+            <img src="buerenLogo.png" alt="FC Büren Logo" class="logo-image">
+        </a>
+        
+        <button class="nav-toggle" (click)="toggleMenu()" aria-label="Navigation öffnen">
+            ☰
+        </button>
+        
+        <nav class="nav-links" [class.active]="isMenuOpen">
+            <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="isMenuOpen = false">Start</a>
+            <a routerLink="/team" routerLinkActive="active" (click)="isMenuOpen = false">Aktive</a>
+            <a href="#" (click)="isMenuOpen = false">Junioren</a>
+            <a href="#" (click)="isMenuOpen = false">Verein</a>
+            <a href="https://fcb.equiplab.ch/" target="_blank" rel="noopener">Ausrüstung</a>
+            <a routerLink="/spiele" routerLinkActive="active" (click)="isMenuOpen = false">Kalender</a>
+            <a routerLink="/kontakt" routerLinkActive="active" (click)="isMenuOpen = false">Kontakt</a>
+            
+            <!-- Expandable Search Field -->
+            <div class="nav-search" #searchContainer [class.expanded]="isSearchOpen">
+                <button type="button" aria-label="Suchen" (click)="toggleSearch($event)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+                <input type="text" placeholder="Suchen..." [class.visible]="isSearchOpen">
+            </div>
+        </nav>
+    </div>
+</header>
