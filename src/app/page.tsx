@@ -1,11 +1,35 @@
-"use client";
-
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import prisma from '@/lib/prisma';
+import ScrollObserver from '@/components/ScrollObserver';
+import NewsCard from '@/components/NewsCard';
 
-export default function Home() {
+export default async function Home() {
+  // Fetch latest 2 events
+  const upcomingEvents = await prisma.event.findMany({
+    orderBy: { date: 'asc' },
+    where: {
+      date: {
+        gte: new Date()
+      }
+    },
+    take: 2
+  });
+
+  // Fetch latest news
+  const NEWS_PER_PAGE = 6;
+  const totalNews = await prisma.news.count();
+  const totalPages = Math.ceil(totalNews / NEWS_PER_PAGE);
+
+  const latestNews = await prisma.news.findMany({
+    orderBy: { createdAt: 'desc' },
+    take: NEWS_PER_PAGE
+  });
+
   return (
     <>
+      <ScrollObserver />
       <section className="hero">
         <div className="container">
           <h1>Willkommen beim FC Büren</h1>
@@ -18,12 +42,12 @@ export default function Home() {
           <h2>Nächste Spiele</h2>
           <p>Verfolge unsere Teams live auf dem Platz!</p>
         </div>
-        
+
         {/* Eigene Match-Container */}
         <div className="matches-grid">
-          
+
           {/* Karte 1: B Junioren */}
-          <div className="match-card-container">
+          <div className="match-card-container animate-on-scroll">
             <div className="match-card-header">
               <span>SA. 12.09.26</span>
               <span>Büren Lachen Platz</span>
@@ -44,13 +68,13 @@ export default function Home() {
           </div>
 
           {/* Karte 2: 5. Liga */}
-          <div className="match-card-container">
+          <div className="match-card-container animate-on-scroll">
             <div className="match-card-header">
               <span>SA. 12.09.26</span>
               <span>Büren Lachen Platz</span>
               <span>16:00</span>
             </div>
-            <div className="match-league-title">5. Liga</div>
+            <div className="match-league-title">Meisterschaft 5. Liga</div>
             <div className="match-teams">
               <div className="team-row">
                 <div className="team-logo-square"></div>
@@ -65,13 +89,13 @@ export default function Home() {
           </div>
 
           {/* Karte 3: 4. Liga */}
-          <div className="match-card-container">
+          <div className="match-card-container animate-on-scroll">
             <div className="match-card-header">
               <span>SO. 13.09.26</span>
               <span>Auswärts</span>
               <span>10:15</span>
             </div>
-            <div className="match-league-title">4. Liga</div>
+            <div className="match-league-title">Meisterschaft 4. Liga</div>
             <div className="match-teams">
               <div className="team-row">
                 <div className="team-logo-square"></div>
@@ -86,7 +110,7 @@ export default function Home() {
           </div>
 
           {/* Karte 4: Cup B */}
-          <div className="match-card-container">
+          <div className="match-card-container animate-on-scroll">
             <div className="match-card-header">
               <span>MI. 16.09.26</span>
               <span>Büren Lachen Platz</span>
@@ -109,19 +133,97 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TEMPORARY SPACER */}
-      <div style={{ height: '150px' }} className="temp-spacer"></div>
+      <section className="container py-xl" style={{ paddingTop: '0' }}>
+        <div className="text-center mb-lg">
+          <h2>News und Beiträge</h2>
+          <p>Aktuelle Spielberichte und Neuigkeiten</p>
+        </div>
+
+        <div className="news-section">
+          {latestNews.length > 0 ? latestNews.map((news) => (
+            <NewsCard 
+              key={news.id} 
+              title={news.title}
+              content={news.content}
+              author={news.author || 'Redaktion'}
+              date={new Date(news.createdAt).toLocaleDateString('de-CH')}
+              views={news.views}
+              initialLikes={news.likes}
+            />
+          )) : (
+            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '2rem', background: 'var(--clr-bg-alt)', borderRadius: '8px' }}>
+              Aktuell gibt es keine News.
+            </div>
+          )}
+        </div>
+
+        {/* Pagination */}
+        {totalPages > 0 && (
+          <div className="pagination">
+            <button className="page-nav" disabled>&laquo;</button>
+            <button className="page-nav" disabled>&lsaquo;</button>
+            {Array.from({ length: totalPages }).map((_, i) => (
+              <button key={i} className={`page-num ${i === 0 ? 'active' : ''}`}>{i + 1}</button>
+            ))}
+            <button className="page-nav" disabled={totalPages <= 1}>&rsaquo;</button>
+            <button className="page-nav" disabled={totalPages <= 1}>&raquo;</button>
+          </div>
+        )}
+      </section>
+
+      {/* Veranstaltungen Section */}
+      <section className="container py-xl">
+        <div className="text-center mb-lg">
+          <h2>Bevorstehende Veranstaltungen</h2>
+          <p>Sei dabei an unseren kommenden Vereins-Events.</p>
+        </div>
+        
+        <div className="events-grid">
+          {upcomingEvents.length > 0 ? upcomingEvents.map((event, index) => (
+            <div key={event.id} className="event-card animate-on-scroll" style={{ transitionDelay: `${index * 0.1}s` }}>
+              <div className="event-image">
+                {event.imageUrl ? (
+                  <img src={event.imageUrl} alt={event.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
+                  <span>FC BÜREN</span>
+                )}
+              </div>
+              <div className="event-divider"></div>
+              <div className="event-meta">
+                <span>{new Date(event.date).toLocaleDateString('de-CH')}</span>
+                <span>VEREINSEVENT</span>
+              </div>
+              <div className="event-divider"></div>
+              <div className="event-body">
+                <h3 className="event-title" style={{ textTransform: 'uppercase' }}>{event.title}</h3>
+              </div>
+              <div className="event-divider"></div>
+              <div className="event-footer">
+                {event.linkUrl ? (
+                  <a href={event.linkUrl} target="_blank" rel="noopener noreferrer" className="btn">Erfahre hier mehr</a>
+                ) : (
+                  <Link href="/news" className="btn">Erfahre hier mehr</Link>
+                )}
+              </div>
+            </div>
+          )) : (
+            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '2rem', background: 'var(--clr-bg-alt)', borderRadius: '8px' }}>
+              Aktuell sind keine speziellen Vereinsanlässe geplant.
+            </div>
+          )}
+        </div>
+      </section>
 
       {/* Full-width Sponsoren Section */}
-      <section style={{ backgroundColor: 'white', padding: '3rem 0', width: '100vw', overflow: 'hidden' }}>
+      <section style={{ backgroundColor: 'white', color: '#111111', padding: '3rem 0', width: '100%', overflow: 'hidden' }}>
         <div className="container text-center mb-lg">
           <h2>Unsere Sponsoren</h2>
           <p>Herzlichen Dank für die Unterstützung!</p>
         </div>
-        
+
         {/* Scrolling Sponsors Band */}
         <div className="sponsor-marquee-wrapper">
-          
+
           {/* Row 1 (Top) */}
           <div className="marquee-track">
             {/* Set 1 */}
@@ -165,7 +267,7 @@ export default function Home() {
               ))}
             </div>
           </div>
-          
+
           {/* Row 4 (Bottom) */}
           <div className="marquee-track x-slow">
             <div className="marquee-content">
