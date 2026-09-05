@@ -23,9 +23,6 @@ export default function NotFound() {
         {/* Content */}
         <div className="not-found-content">
           <h1 className="not-found-title">404</h1>
-          <div style={{ marginTop: '0.5rem' }}>
-            <img src="/buerenLogo.png" alt="FC Büren" style={{ width: '80px', filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.3))' }} />
-          </div>
         </div>
       </div>
 
