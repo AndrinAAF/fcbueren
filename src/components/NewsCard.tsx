@@ -1,17 +1,20 @@
 "use client";
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 
 interface NewsCardProps {
+  id: string;
   title: string;
   content: string;
   author: string;
   date: string;
   views: number;
   initialLikes: number;
+  imageUrl?: string | null;
 }
 
-export default function NewsCard({ title, content, author, date, views, initialLikes }: NewsCardProps) {
+export default function NewsCard({ id, title, content, author, date, views, initialLikes, imageUrl }: NewsCardProps) {
   const [likes, setLikes] = useState(initialLikes);
   const [isLiked, setIsLiked] = useState(false);
 
@@ -27,18 +30,24 @@ export default function NewsCard({ title, content, author, date, views, initialL
   };
 
   return (
-    <a href="#" className="news-card animate-on-scroll">
+    <Link href={`/news/${id}`} className="news-card">
       <div className="news-image">
-        BILD
+        {imageUrl ? (
+          <img src={imageUrl} alt={title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        ) : (
+          <div style={{ width: '100%', height: '100%', backgroundColor: '#eee', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999' }}>
+            Kein Bild
+          </div>
+        )}
       </div>
       <div className="news-content">
         <div className="news-header">
           <span>{author || 'Redaktion'}</span>
           <span>{date}</span>
         </div>
-        <div className="news-title">{title}</div>
-        <div className="news-body">
-          {content.length > 150 ? content.substring(0, 150) + '...' : content}
+        <div className="news-title" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>{title}</div>
+        <div className="news-body" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
+          {content.replace(/<[^>]+>/g, '').length > 150 ? content.replace(/<[^>]+>/g, '').substring(0, 150) + '...' : content.replace(/<[^>]+>/g, '')}
         </div>
         <div className="news-footer">
           <div className="news-stats">
@@ -53,6 +62,6 @@ export default function NewsCard({ title, content, author, date, views, initialL
           </div>
         </div>
       </div>
-    </a>
+    </Link>
   );
 }

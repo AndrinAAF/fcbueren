@@ -1,20 +1,22 @@
 "use client";
 
 import React from 'react';
+import ScrollObserver from '@/components/ScrollObserver';
 
 export default function Kontakt() {
   return (
     <>
+      <ScrollObserver />
     <section className="container py-xl" style={{ flex: 1 }}>
-      <div className="text-center" style={{ marginBottom: '5rem' }}>
-        <h1>Kontakt & Anfahrt</h1>
+      <div className="text-center animate-on-scroll" style={{ marginBottom: '5rem' }}>
+        <h1 style={{ color: 'var(--clr-primary)', fontStyle: 'italic', marginBottom: '1.5rem', fontWeight: 900, fontSize: 'clamp(3rem, 6vw, 4.5rem)' }}>Kontakt und Anfahrt</h1>
         <p>Wir freuen uns von dir zu hören und dich auf dem Sportplatz Lachen zu begrüssen!</p>
       </div>
       
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '3rem', marginBottom: '4rem' }}>
         
         {/* Left side: Image and Info */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+        <div className="animate-on-scroll" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
           <div style={{ borderRadius: 'var(--radius-md)', overflow: 'hidden', boxShadow: 'var(--shadow-sm)', aspectRatio: '16/9', position: 'relative' }}>
             <img src="/assets/images/platz.jpg" alt="Sportplatz Lachen" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
@@ -31,7 +33,7 @@ export default function Kontakt() {
         </div>
 
         {/* Right side: Contact Form */}
-        <div style={{ background: 'var(--clr-surface)', padding: '2rem', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-sm)', alignSelf: 'start' }}>
+        <div className="animate-on-scroll" style={{ background: 'var(--clr-surface)', padding: '2rem', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-sm)', alignSelf: 'start' }}>
           <h3 className="mb-lg">Schreib uns eine Nachricht</h3>
           <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }} onSubmit={(e) => e.preventDefault()}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -53,7 +55,7 @@ export default function Kontakt() {
     </section>
 
     {/* Google Maps Embed in a themed section */}
-    <section style={{ background: 'var(--clr-surface)', padding: '4rem 0', marginTop: 'auto' }}>
+    <section className="animate-on-scroll" style={{ background: 'var(--clr-surface)', padding: '4rem 0', marginTop: 'auto' }}>
       <div className="container text-center mb-lg">
         <h2 style={{ color: 'var(--clr-text)' }}>Hier findest du uns</h2>
       </div>

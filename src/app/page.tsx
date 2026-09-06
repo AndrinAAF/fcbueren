@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import ScrollObserver from '@/components/ScrollObserver';
-import NewsCard from '@/components/NewsCard';
+import NewsSectionClient from '@/components/NewsSectionClient';
 
 export default async function Home() {
   // Fetch latest 2 events
@@ -22,24 +22,25 @@ export default async function Home() {
   const totalNews = await prisma.news.count();
   const totalPages = Math.ceil(totalNews / NEWS_PER_PAGE);
 
-  const latestNews = await prisma.news.findMany({
-    orderBy: { createdAt: 'desc' },
-    take: NEWS_PER_PAGE
-  });
+  const latestNews = await prisma.$queryRaw<any[]>`
+    SELECT * FROM News
+    ORDER BY createdAt DESC
+    LIMIT ${NEWS_PER_PAGE} OFFSET 0
+  `;
 
   return (
     <>
       <ScrollObserver />
       <section className="hero">
         <div className="container">
-          <h1>Willkommen beim FC Büren</h1>
+          <h1 style={{ color: 'white', fontStyle: 'normal' }}>Willkommen beim FC Büren</h1>
           <p>Leidenschaft, Teamgeist und Tradition. Erlebe Fussball mit uns.</p>
         </div>
       </section>
 
       <section className="container py-xl">
         <div className="text-center mb-lg">
-          <h2>Nächste Spiele</h2>
+          <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)' }}>Nächste Spiele</h2>
           <p>Verfolge unsere Teams live auf dem Platz!</p>
         </div>
 
@@ -135,46 +136,18 @@ export default async function Home() {
 
       <section className="container py-xl" style={{ paddingTop: '0' }}>
         <div className="text-center mb-lg">
-          <h2>News und Beiträge</h2>
-          <p>Aktuelle Spielberichte und Neuigkeiten</p>
+          <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)' }}>News und Beiträge</h2>
+          <p>Bleibe auf dem Laufenden rund um den FC Büren</p>
         </div>
-
-        <div className="news-section">
-          {latestNews.length > 0 ? latestNews.map((news) => (
-            <NewsCard 
-              key={news.id} 
-              title={news.title}
-              content={news.content}
-              author={news.author || 'Redaktion'}
-              date={new Date(news.createdAt).toLocaleDateString('de-CH')}
-              views={news.views}
-              initialLikes={news.likes}
-            />
-          )) : (
-            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '2rem', background: 'var(--clr-bg-alt)', borderRadius: '8px' }}>
-              Aktuell gibt es keine News.
-            </div>
-          )}
+        <div className="animate-on-scroll">
+          <NewsSectionClient initialNews={latestNews} totalPages={totalPages} />
         </div>
-
-        {/* Pagination */}
-        {totalPages > 0 && (
-          <div className="pagination">
-            <button className="page-nav" disabled>&laquo;</button>
-            <button className="page-nav" disabled>&lsaquo;</button>
-            {Array.from({ length: totalPages }).map((_, i) => (
-              <button key={i} className={`page-num ${i === 0 ? 'active' : ''}`}>{i + 1}</button>
-            ))}
-            <button className="page-nav" disabled={totalPages <= 1}>&rsaquo;</button>
-            <button className="page-nav" disabled={totalPages <= 1}>&raquo;</button>
-          </div>
-        )}
       </section>
 
       {/* Veranstaltungen Section */}
       <section className="container py-xl">
         <div className="text-center mb-lg">
-          <h2>Bevorstehende Veranstaltungen</h2>
+          <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)' }}>Bevorstehende Veranstaltungen</h2>
           <p>Sei dabei an unseren kommenden Vereins-Events.</p>
         </div>
         
@@ -195,7 +168,7 @@ export default async function Home() {
               </div>
               <div className="event-divider"></div>
               <div className="event-body">
-                <h3 className="event-title" style={{ textTransform: 'uppercase' }}>{event.title}</h3>
+                <h3 className="event-title" style={{ textTransform: 'uppercase', fontStyle: 'normal', color: 'var(--clr-primary)', fontWeight: 'bold' }}>{event.title}</h3>
               </div>
               <div className="event-divider"></div>
               <div className="event-footer">
@@ -216,8 +189,8 @@ export default async function Home() {
 
       {/* Full-width Sponsoren Section */}
       <section style={{ backgroundColor: 'white', color: '#111111', padding: '3rem 0', width: '100%', overflow: 'hidden' }}>
-        <div className="container text-center mb-lg">
-          <h2>Unsere Sponsoren</h2>
+        <div className="container text-center">
+          <h2 style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)' }}>Unsere Sponsoren</h2>
           <p>Herzlichen Dank für die Unterstützung!</p>
         </div>
 

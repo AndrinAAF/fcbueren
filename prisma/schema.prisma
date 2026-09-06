@@ -23,7 +23,10 @@ model News {
   title       String
   content     String
   author      String?
+  photographer String?
   imageUrl    String?
+  images      String   @default("[]") // JSON string for slideshow
+  tags        String   @default("[]") // JSON string for tags
   views       Int      @default(0)
   likes       Int      @default(0)
   createdAt   DateTime @default(now())
@@ -40,4 +43,11 @@ model Player {
   imageUrl    String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model TeamSettings {
+  id        String   @id @default(cuid())
+  teamSlug  String   @unique
+  imageUrl  String?
+  updatedAt DateTime @updatedAt
 }

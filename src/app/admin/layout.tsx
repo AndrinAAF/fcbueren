@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import Link from 'next/link';
+import AdminSidebar from './AdminSidebar';
 import './admin.css';
 
 export default async function AdminLayout({
@@ -37,22 +37,19 @@ export default async function AdminLayout({
 
   return (
     <div className="admin-layout">
-      <aside className="admin-sidebar">
-        <h2>FC Büren Admin</h2>
-        <nav className="admin-nav">
-          <Link href="/admin">Dashboard</Link>
-          <Link href="/admin/events">Veranstaltungen</Link>
-          <Link href="/admin/news">News & Beiträge</Link>
+      <AdminSidebar>
+        <div style={{ marginTop: 'auto', paddingTop: '2rem', borderTop: '1px solid #444444' }}>
           <form action={async () => {
             'use server';
             const cookieStore = await cookies();
             cookieStore.delete('admin_token');
             redirect('/admin');
           }}>
-            <button type="submit" className="admin-logout-btn">Logout</button>
+            <button type="submit" className="admin-logout-btn">Abmelden</button>
           </form>
-        </nav>
-      </aside>
+        </div>
+      </AdminSidebar>
+      
       <main className="admin-main">
         {children}
       </main>

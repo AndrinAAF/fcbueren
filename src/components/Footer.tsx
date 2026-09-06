@@ -58,24 +58,28 @@ export default function Footer() {
           
           {/* Sponsoren Logos (Rechts) */}
           <div className="footer-col" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', justifyContent: 'flex-start', gap: '1.5rem' }}>
-            <img 
-              src="/assets/images/sponsors/sponsor29.png" 
-              alt="Bigler Logo" 
-              style={{ maxHeight: '220px', marginTop: '-25px' }} 
-              onError={(e) => {
-                const target = e.target as HTMLElement;
-                target.outerHTML = '<div style="width:100px;height:120px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;margin-top:-25px;">Bigler</div>';
-              }} 
-            />
-            <img 
-              src="/assets/images/sponsors/sponsor3.png" 
-              alt="SPAR Weibel Logo" 
-              style={{ maxHeight: '80px' }} 
-              onError={(e) => {
-                const target = e.target as HTMLElement;
-                target.outerHTML = '<div style="width:150px;height:70px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;">SPAR</div>';
-              }} 
-            />
+            <a href="https://www.bigler.ch/de" target="_blank" rel="noopener noreferrer">
+              <img 
+                src="/assets/images/sponsors/sponsor29.png" 
+                alt="Bigler Logo" 
+                style={{ maxHeight: '220px', marginTop: '-25px' }} 
+                onError={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.outerHTML = '<div style="width:100px;height:120px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;margin-top:-25px;">Bigler</div>';
+                }} 
+              />
+            </a>
+            <a href="https://www.spar.ch/standorte/detail/weibel-yves" target="_blank" rel="noopener noreferrer">
+              <img 
+                src="/assets/images/sponsors/sponsor3.png" 
+                alt="SPAR Weibel Logo" 
+                style={{ maxHeight: '80px' }} 
+                onError={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.outerHTML = '<div style="width:150px;height:70px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;">SPAR</div>';
+                }} 
+              />
+            </a>
           </div>
         </div>
         

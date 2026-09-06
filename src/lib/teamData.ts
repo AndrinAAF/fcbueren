@@ -37,7 +37,7 @@ export const teamsData: Team[] = [
   // Junioren
   {
     slug: 'haeftli-b',
-    name: 'Team Häftli B',
+    name: 'B Junioren',
     category: 'Junioren',
     league: '1. Stärkeklasse',
     instagram: 'https://www.instagram.com/team_haeftli_b/',
@@ -45,32 +45,32 @@ export const teamsData: Team[] = [
   },
   {
     slug: 'haeftli-c',
-    name: 'Team Häftli C',
+    name: 'C Junioren',
     category: 'Junioren',
     league: '2. Stärkeklasse',
     description: 'Unsere C-Junioren in der Spielgemeinschaft Team Häftli.',
   },
   {
     slug: 'haeftli-d9',
-    name: 'Team Häftli D/9',
+    name: 'D/9 Junioren',
     category: 'Junioren',
     description: 'D-Junioren (9er Fussball) der Spielgemeinschaft Team Häftli.',
   },
   {
     slug: 'haeftli-d7',
-    name: 'Team Häftli D/7',
+    name: 'D/7 Junioren',
     category: 'Junioren',
     description: 'D-Junioren (7er Fussball) der Spielgemeinschaft Team Häftli.',
   },
   {
     slug: 'bueren-e',
-    name: 'Büren E Junioren',
+    name: 'E Junioren',
     category: 'Junioren',
     description: 'Unsere aufstrebenden Talente bei den E-Junioren.',
   },
   {
     slug: 'bueren-fg',
-    name: 'Büren F/G Junioren',
+    name: 'F/G Junioren',
     category: 'Junioren',
     description: 'Die jüngsten Kicker des FC Büren an der Aare. Spass am Fussball steht an erster Stelle!',
   },
