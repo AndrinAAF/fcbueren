@@ -6,17 +6,18 @@ export async function getNewsPage(page: number) {
   const NEWS_PER_PAGE = 6;
   const skip = (page - 1) * NEWS_PER_PAGE;
 
-  // Use raw SQL to bypass Prisma schema locks for recently added fields and subqueries
-  const newsRaw = await prisma.$queryRaw<any[]>`
-    SELECT n.*, (SELECT COUNT(*) FROM "Comment" c WHERE c."newsId" = n.id) as commentCount
-    FROM "News" n
-    ORDER BY "createdAt" DESC
-    LIMIT ${NEWS_PER_PAGE} OFFSET ${skip}
-  `;
+  const newsRaw = await prisma.news.findMany({
+    orderBy: { createdAt: 'desc' },
+    take: NEWS_PER_PAGE,
+    skip: skip,
+    include: {
+      _count: { select: { comments: true } }
+    }
+  });
   
   const news = newsRaw.map(n => ({
     ...n,
-    commentCount: Number(n.commentCount || 0)
+    commentCount: n._count?.comments || 0
   }));
 
   // Serialize Date objects and ensure plain JSON
@@ -25,11 +26,10 @@ export async function getNewsPage(page: number) {
 
 export async function incrementViews(id: string) {
   try {
-    await prisma.$executeRaw`
-      UPDATE "News" 
-      SET views = views + 1 
-      WHERE id = ${id}
-    `;
+    await prisma.news.update({
+      where: { id },
+      data: { views: { increment: 1 } }
+    });
     return true;
   } catch (error) {
     console.error('Failed to increment views:', error);
@@ -40,16 +40,10 @@ export async function incrementViews(id: string) {
 export async function addComment(newsId: string, authorName: string, authorEmail: string | null, content: string, parentId: string | null = null) {
   try {
     const id = crypto.randomUUID();
-    const now = new Date().toISOString();
+    const now = new Date();
     
-    await prisma.$executeRaw`
-      INSERT INTO "Comment" (id, "newsId", "authorName", "authorEmail", content, likes, "parentId", "createdAt")
-      VALUES (${id}, ${newsId}, ${authorName}, ${authorEmail}, ${content}, 0, ${parentId}, ${now})
-    `;
-    
-    return { 
-      success: true, 
-      comment: {
+    const comment = await prisma.comment.create({
+      data: {
         id,
         newsId,
         authorName,
@@ -58,6 +52,14 @@ export async function addComment(newsId: string, authorName: string, authorEmail
         likes: 0,
         parentId,
         createdAt: now
+      }
+    });
+    
+    return { 
+      success: true, 
+      comment: {
+        ...comment,
+        createdAt: comment.createdAt.toISOString()
       } 
     };
   } catch (error) {
@@ -68,11 +70,10 @@ export async function addComment(newsId: string, authorName: string, authorEmail
 
 export async function getComments(newsId: string) {
   try {
-    const comments = await prisma.$queryRaw<any[]>`
-      SELECT * FROM "Comment"
-      WHERE "newsId" = ${newsId}
-      ORDER BY "createdAt" ASC
-    `;
+    const comments = await prisma.comment.findMany({
+      where: { newsId },
+      orderBy: { createdAt: 'asc' }
+    });
     return JSON.parse(JSON.stringify(comments));
   } catch (error) {
     console.error('Failed to fetch comments:', error);
@@ -82,11 +83,10 @@ export async function getComments(newsId: string) {
 
 export async function likeComment(commentId: string) {
   try {
-    await prisma.$executeRaw`
-      UPDATE "Comment" 
-      SET likes = likes + 1 
-      WHERE id = ${commentId}
-    `;
+    await prisma.comment.update({
+      where: { id: commentId },
+      data: { likes: { increment: 1 } }
+    });
     return { success: true };
   } catch (error) {
     console.error('Failed to like comment:', error);
@@ -96,11 +96,10 @@ export async function likeComment(commentId: string) {
 
 export async function likeNews(newsId: string) {
   try {
-    await prisma.$executeRaw`
-      UPDATE "News" 
-      SET likes = likes + 1 
-      WHERE id = ${newsId}
-    `;
+    await prisma.news.update({
+      where: { id: newsId },
+      data: { likes: { increment: 1 } }
+    });
     return { success: true };
   } catch (error) {
     console.error('Failed to like news:', error);
