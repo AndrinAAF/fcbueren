@@ -18,7 +18,8 @@ export default async function EditNewsPage({ params }: { params: Promise<{ id: s
     notFound();
   }
 
-  const news = newsList[0];
+  // Remove Date objects before passing to Client Component
+  const { createdAt, updatedAt, ...news } = newsList[0];
 
   return <NewsFormClient initialData={news} />;
 }

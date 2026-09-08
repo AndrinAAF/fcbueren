@@ -18,7 +18,10 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
     notFound();
   }
 
-  const event = eventRaw[0];
+  const event = {
+    ...eventRaw[0],
+    date: eventRaw[0].date.toISOString(),
+  };
 
   return <EventFormClient initialData={event} />;
 }
