@@ -2,6 +2,8 @@ import prisma from '@/lib/prisma';
 import NewsFormClient from '../NewsFormClient';
 import { notFound } from 'next/navigation';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Beitrag Bearbeiten',
 };

@@ -6,6 +6,8 @@ import ScrollObserver from '@/components/ScrollObserver';
 import NewsSectionClient from '@/components/NewsSectionClient';
 import EventsSectionClient from '@/components/EventsSectionClient';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   // Fetch latest events
   const EVENTS_PER_PAGE = 3;

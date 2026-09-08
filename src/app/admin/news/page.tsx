@@ -3,6 +3,8 @@ import NewsListClient from './NewsListClient';
 
 import { revalidatePath } from 'next/cache';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'News Verwalten',
 };
@@ -29,3 +31,4 @@ export default async function AdminNewsPage() {
     <NewsListClient initialNews={newsList} deleteAction={deleteNews} />
   );
 }
+

@@ -2,6 +2,8 @@ import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import EventsListClient from './EventsListClient';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Veranstaltungen Verwalten',
 };
@@ -27,3 +29,4 @@ export default async function AdminEventsPage() {
     <EventsListClient initialEvents={events} deleteAction={deleteEvent} />
   );
 }
+

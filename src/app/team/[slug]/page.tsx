@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import prisma from '@/lib/prisma';
 import ScrollObserver from '@/components/ScrollObserver';
 
+export const dynamic = 'force-dynamic';
+
 export async function generateStaticParams() {
   return teamsData.map((team) => ({
     slug: team.slug,

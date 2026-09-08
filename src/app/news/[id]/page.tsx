@@ -7,6 +7,8 @@ import CommentSection from '@/components/CommentSection';
 import ImageSlider from '@/components/ImageSlider';
 import ScrollObserver from '@/components/ScrollObserver';
 
+export const dynamic = 'force-dynamic';
+
 export default async function NewsDetailPage({ params }: { params: Promise<{ id: string }> }) {
   // Await the params since Next.js 15+ has asynchronous params
   const { id } = await params;
