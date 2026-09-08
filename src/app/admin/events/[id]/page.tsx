@@ -11,12 +11,8 @@ export const metadata = {
 export default async function EditEventPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   
-  const eventRaw = await prisma.$queryRaw<any[]>`
-    SELECT id, title, date, description, content, address, "imageUrl", "linkUrl"
-    FROM "Event" 
-    WHERE id = ${id}
-    LIMIT 1
-  `;
+  const eventItem = await prisma.event.findUnique({ where: { id } });
+  const eventRaw = eventItem ? [eventItem] : [];
   
   if (!eventRaw || eventRaw.length === 0) {
     notFound();

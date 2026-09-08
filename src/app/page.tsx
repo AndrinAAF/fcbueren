@@ -35,16 +35,17 @@ export default async function Home() {
   const totalNews = await prisma.news.count();
   const totalPages = Math.ceil(totalNews / NEWS_PER_PAGE);
 
-  const latestNewsRaw = await prisma.$queryRaw<any[]>`
-    SELECT n.*, (SELECT COUNT(*) FROM "Comment" c WHERE c."newsId" = n.id) as commentCount
-    FROM "News" n
-    ORDER BY n."createdAt" DESC
-    LIMIT ${NEWS_PER_PAGE} OFFSET 0
-  `;
+  const latestNewsRaw = await prisma.news.findMany({
+    orderBy: { createdAt: 'desc' },
+    take: NEWS_PER_PAGE,
+    include: {
+      _count: { select: { comments: true } }
+    }
+  });
   
   const latestNews = latestNewsRaw.map(news => ({
     ...news,
-    commentCount: Number(news.commentCount || 0)
+    commentCount: news._count?.comments || 0
   }));
   
   console.log("Debug commentCount in page.tsx:", latestNews.map(n => n.commentCount));

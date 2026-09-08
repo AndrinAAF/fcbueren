@@ -13,12 +13,8 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ id:
   // Await the params since Next.js 15+ has asynchronous params
   const { id } = await params;
   
-  // Use raw SQL to fetch the specific news item to bypass Prisma schema locks
-  const newsItems = await prisma.$queryRaw<any[]>`
-    SELECT * FROM "News"
-    WHERE id = ${id}
-    LIMIT 1
-  `;
+  const newsItem = await prisma.news.findUnique({ where: { id } });
+  const newsItems = newsItem ? [newsItem] : [];
   
   if (!newsItems || newsItems.length === 0) {
     notFound();

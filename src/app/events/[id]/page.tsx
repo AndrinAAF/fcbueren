@@ -9,12 +9,8 @@ export const dynamic = 'force-dynamic';
 export default async function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  const eventRaw = await prisma.$queryRaw<any[]>`
-    SELECT id, title, date, description, content, address, "imageUrl", "linkUrl", "createdAt"
-    FROM "Event" 
-    WHERE id = ${id}
-    LIMIT 1
-  `;
+  const eventItem = await prisma.event.findUnique({ where: { id } });
+  const eventRaw = eventItem ? [eventItem] : [];
 
   if (!eventRaw || eventRaw.length === 0) {
     notFound();

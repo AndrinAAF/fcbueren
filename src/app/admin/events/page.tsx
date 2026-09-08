@@ -9,11 +9,10 @@ export const metadata = {
 };
 
 export default async function AdminEventsPage() {
-  const events = await prisma.$queryRaw<any[]>`
-    SELECT id, title, date, address
-    FROM "Event"
-    ORDER BY date ASC
-  `;
+  const events = await prisma.event.findMany({
+    select: { id: true, title: true, date: true, address: true },
+    orderBy: { date: 'asc' }
+  });
 
   async function deleteEvent(formData: FormData) {
     'use server';

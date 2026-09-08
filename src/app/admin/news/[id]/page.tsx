@@ -11,12 +11,8 @@ export const metadata = {
 export default async function EditNewsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   
-  const newsList = await prisma.$queryRaw<any[]>`
-    SELECT id, title, content, author, photographer, tags, images, "imageUrl", "createdAt"
-    FROM "News" 
-    WHERE id = ${id}
-    LIMIT 1
-  `;
+  const newsItem = await prisma.news.findUnique({ where: { id } });
+  const newsList = newsItem ? [newsItem] : [];
 
   if (!newsList || newsList.length === 0) {
     notFound();

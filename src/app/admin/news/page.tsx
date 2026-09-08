@@ -10,11 +10,10 @@ export const metadata = {
 };
 
 export default async function AdminNewsPage() {
-  const newsList = await prisma.$queryRaw<any[]>`
-    SELECT id, title, author, tags, "createdAt" 
-    FROM "News" 
-    ORDER BY "createdAt" DESC
-  `;
+  const newsList = await prisma.news.findMany({
+    select: { id: true, title: true, author: true, tags: true, createdAt: true },
+    orderBy: { createdAt: 'desc' }
+  });
 
   async function deleteNews(formData: FormData) {
     'use server';
