@@ -21,10 +21,18 @@ export async function POST(request: NextRequest) {
 
     const newId = crypto.randomUUID();
     
-    await prisma.$executeRaw`
-      INSERT INTO "News" (id, title, content, author, photographer, tags, images, "imageUrl", "createdAt", "updatedAt")
-      VALUES (${newId}, ${title}, ${content}, ${author || null}, ${photographer || null}, ${tags || '[]'}, ${images || '[]'}, ${imageUrl || null}, datetime('now'), datetime('now'))
-    `;
+    await prisma.news.create({
+      data: {
+        id: newId,
+        title,
+        content,
+        author: author || null,
+        photographer: photographer || null,
+        tags: tags || '[]',
+        images: images || '[]',
+        imageUrl: imageUrl || null
+      }
+    });
 
     revalidatePath('/admin/news');
     revalidatePath('/');
@@ -54,11 +62,18 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ success: false, message: 'Missing fields' }, { status: 400 });
     }
 
-    await prisma.$executeRaw`
-      UPDATE "News" 
-      SET title = ${title}, content = ${content}, author = ${author || null}, photographer = ${photographer || null}, tags = ${tags || '[]'}, images = ${images || '[]'}, "imageUrl" = ${imageUrl || null}, "updatedAt" = datetime('now')
-      WHERE id = ${id}
-    `;
+    await prisma.news.update({
+      where: { id },
+      data: {
+        title,
+        content,
+        author: author || null,
+        photographer: photographer || null,
+        tags: tags || '[]',
+        images: images || '[]',
+        imageUrl: imageUrl || null
+      }
+    });
 
     revalidatePath('/admin/news');
     revalidatePath(`/admin/news/${id}`);
