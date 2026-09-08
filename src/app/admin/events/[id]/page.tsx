@@ -12,8 +12,8 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
   const { id } = await params;
   
   const eventRaw = await prisma.$queryRaw<any[]>`
-    SELECT id, title, date, description, content, address, imageUrl, linkUrl
-    FROM Event 
+    SELECT id, title, date, description, content, address, "imageUrl", "linkUrl"
+    FROM "Event" 
     WHERE id = ${id}
     LIMIT 1
   `;

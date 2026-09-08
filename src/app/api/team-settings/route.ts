@@ -13,15 +13,15 @@ export async function POST(request: NextRequest) {
 
     // Workaround for locked Prisma Client generation: Use raw queries.
     // Check if it exists
-    const existing: any[] = await prisma.$queryRaw`SELECT * FROM TeamSettings WHERE teamSlug = ${teamSlug} LIMIT 1`;
+    const existing: any[] = await prisma.$queryRaw`SELECT * FROM "TeamSettings" WHERE "teamSlug" = ${teamSlug} LIMIT 1`;
     
     if (existing.length > 0) {
       // Update
-      await prisma.$executeRaw`UPDATE TeamSettings SET imageUrl = ${imageUrl}, updatedAt = ${new Date().toISOString()} WHERE teamSlug = ${teamSlug}`;
+      await prisma.$executeRaw`UPDATE "TeamSettings" SET "imageUrl" = ${imageUrl}, "updatedAt" = ${new Date().toISOString()} WHERE "teamSlug" = ${teamSlug}`;
     } else {
       // Insert
       const id = crypto.randomUUID();
-      await prisma.$executeRaw`INSERT INTO TeamSettings (id, teamSlug, imageUrl, updatedAt) VALUES (${id}, ${teamSlug}, ${imageUrl}, ${new Date().toISOString()})`;
+      await prisma.$executeRaw`INSERT INTO "TeamSettings" (id, "teamSlug", "imageUrl", "updatedAt") VALUES (${id}, ${teamSlug}, ${imageUrl}, ${new Date().toISOString()})`;
     }
 
     return NextResponse.json({ success: true, message: 'Gespeichert' });

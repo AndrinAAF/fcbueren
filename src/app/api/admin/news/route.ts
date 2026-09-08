@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     const newId = crypto.randomUUID();
     
     await prisma.$executeRaw`
-      INSERT INTO News (id, title, content, author, photographer, tags, images, imageUrl, createdAt, updatedAt)
+      INSERT INTO "News" (id, title, content, author, photographer, tags, images, "imageUrl", "createdAt", "updatedAt")
       VALUES (${newId}, ${title}, ${content}, ${author || null}, ${photographer || null}, ${tags || '[]'}, ${images || '[]'}, ${imageUrl || null}, datetime('now'), datetime('now'))
     `;
 
@@ -55,8 +55,8 @@ export async function PUT(request: NextRequest) {
     }
 
     await prisma.$executeRaw`
-      UPDATE News 
-      SET title = ${title}, content = ${content}, author = ${author || null}, photographer = ${photographer || null}, tags = ${tags || '[]'}, images = ${images || '[]'}, imageUrl = ${imageUrl || null}, updatedAt = datetime('now')
+      UPDATE "News" 
+      SET title = ${title}, content = ${content}, author = ${author || null}, photographer = ${photographer || null}, tags = ${tags || '[]'}, images = ${images || '[]'}, "imageUrl" = ${imageUrl || null}, "updatedAt" = datetime('now')
       WHERE id = ${id}
     `;
 

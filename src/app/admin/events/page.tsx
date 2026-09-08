@@ -11,7 +11,7 @@ export const metadata = {
 export default async function AdminEventsPage() {
   const events = await prisma.$queryRaw<any[]>`
     SELECT id, title, date, address
-    FROM Event
+    FROM "Event"
     ORDER BY date ASC
   `;
 

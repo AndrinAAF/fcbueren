@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     const dateStrIso = new Date(dateStr).toISOString();
     
     await prisma.$executeRaw`
-      INSERT INTO Event (id, title, date, description, content, address, imageUrl, linkUrl, createdAt, updatedAt)
+      INSERT INTO "Event" (id, title, date, description, content, address, "imageUrl", "linkUrl", "createdAt", "updatedAt")
       VALUES (${newId}, ${title}, ${dateStrIso}, ${description || null}, ${content || ''}, ${address || null}, ${imageUrl || null}, ${linkUrl || null}, datetime('now'), datetime('now'))
     `;
 
@@ -58,8 +58,8 @@ export async function PUT(request: NextRequest) {
     const dateStrIso = new Date(dateStr).toISOString();
 
     await prisma.$executeRaw`
-      UPDATE Event 
-      SET title = ${title}, date = ${dateStrIso}, description = ${description || null}, content = ${content || ''}, address = ${address || null}, imageUrl = ${imageUrl || null}, linkUrl = ${linkUrl || null}, updatedAt = datetime('now')
+      UPDATE "Event" 
+      SET title = ${title}, date = ${dateStrIso}, description = ${description || null}, content = ${content || ''}, address = ${address || null}, "imageUrl" = ${imageUrl || null}, "linkUrl" = ${linkUrl || null}, "updatedAt" = datetime('now')
       WHERE id = ${id}
     `;
 

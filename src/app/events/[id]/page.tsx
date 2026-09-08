@@ -10,8 +10,8 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
   const { id } = await params;
 
   const eventRaw = await prisma.$queryRaw<any[]>`
-    SELECT id, title, date, description, content, address, imageUrl, linkUrl, createdAt
-    FROM Event 
+    SELECT id, title, date, description, content, address, "imageUrl", "linkUrl", "createdAt"
+    FROM "Event" 
     WHERE id = ${id}
     LIMIT 1
   `;

@@ -8,9 +8,9 @@ export async function getNewsPage(page: number) {
 
   // Use raw SQL to bypass Prisma schema locks for recently added fields and subqueries
   const newsRaw = await prisma.$queryRaw<any[]>`
-    SELECT n.*, (SELECT COUNT(*) FROM Comment c WHERE c.newsId = n.id) as commentCount
-    FROM News n
-    ORDER BY createdAt DESC
+    SELECT n.*, (SELECT COUNT(*) FROM "Comment" c WHERE c."newsId" = n.id) as commentCount
+    FROM "News" n
+    ORDER BY "createdAt" DESC
     LIMIT ${NEWS_PER_PAGE} OFFSET ${skip}
   `;
   
@@ -26,7 +26,7 @@ export async function getNewsPage(page: number) {
 export async function incrementViews(id: string) {
   try {
     await prisma.$executeRaw`
-      UPDATE News 
+      UPDATE "News" 
       SET views = views + 1 
       WHERE id = ${id}
     `;
@@ -43,7 +43,7 @@ export async function addComment(newsId: string, authorName: string, authorEmail
     const now = new Date().toISOString();
     
     await prisma.$executeRaw`
-      INSERT INTO Comment (id, newsId, authorName, authorEmail, content, likes, parentId, createdAt)
+      INSERT INTO "Comment" (id, "newsId", "authorName", "authorEmail", content, likes, "parentId", "createdAt")
       VALUES (${id}, ${newsId}, ${authorName}, ${authorEmail}, ${content}, 0, ${parentId}, ${now})
     `;
     
@@ -69,9 +69,9 @@ export async function addComment(newsId: string, authorName: string, authorEmail
 export async function getComments(newsId: string) {
   try {
     const comments = await prisma.$queryRaw<any[]>`
-      SELECT * FROM Comment
-      WHERE newsId = ${newsId}
-      ORDER BY createdAt ASC
+      SELECT * FROM "Comment"
+      WHERE "newsId" = ${newsId}
+      ORDER BY "createdAt" ASC
     `;
     return JSON.parse(JSON.stringify(comments));
   } catch (error) {
@@ -83,7 +83,7 @@ export async function getComments(newsId: string) {
 export async function likeComment(commentId: string) {
   try {
     await prisma.$executeRaw`
-      UPDATE Comment 
+      UPDATE "Comment" 
       SET likes = likes + 1 
       WHERE id = ${commentId}
     `;
@@ -97,7 +97,7 @@ export async function likeComment(commentId: string) {
 export async function likeNews(newsId: string) {
   try {
     await prisma.$executeRaw`
-      UPDATE News 
+      UPDATE "News" 
       SET likes = likes + 1 
       WHERE id = ${newsId}
     `;
@@ -111,7 +111,7 @@ export async function likeNews(newsId: string) {
 export async function unlikeComment(commentId: string) {
   try {
     await prisma.$executeRaw`
-      UPDATE Comment 
+      UPDATE "Comment" 
       SET likes = CASE WHEN likes > 0 THEN likes - 1 ELSE 0 END
       WHERE id = ${commentId}
     `;
@@ -125,7 +125,7 @@ export async function unlikeComment(commentId: string) {
 export async function unlikeNews(newsId: string) {
   try {
     await prisma.$executeRaw`
-      UPDATE News 
+      UPDATE "News" 
       SET likes = CASE WHEN likes > 0 THEN likes - 1 ELSE 0 END
       WHERE id = ${newsId}
     `;

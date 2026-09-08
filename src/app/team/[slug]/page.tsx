@@ -25,7 +25,7 @@ export default async function TeamPage({ params }: { params: Promise<{ slug: str
 
   let teamImageUrl = team.image;
   try {
-    const settings = await prisma.$queryRaw<any[]>`SELECT imageUrl FROM TeamSettings WHERE teamSlug = ${slug} LIMIT 1`;
+    const settings = await prisma.$queryRaw<any[]>`SELECT "imageUrl" FROM "TeamSettings" WHERE "teamSlug" = ${slug} LIMIT 1`;
     if (settings && settings.length > 0 && settings[0].imageUrl) {
       teamImageUrl = settings[0].imageUrl;
     }

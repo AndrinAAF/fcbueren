@@ -15,7 +15,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ id:
   
   // Use raw SQL to fetch the specific news item to bypass Prisma schema locks
   const newsItems = await prisma.$queryRaw<any[]>`
-    SELECT * FROM News
+    SELECT * FROM "News"
     WHERE id = ${id}
     LIMIT 1
   `;

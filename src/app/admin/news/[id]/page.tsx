@@ -12,8 +12,8 @@ export default async function EditNewsPage({ params }: { params: Promise<{ id: s
   const { id } = await params;
   
   const newsList = await prisma.$queryRaw<any[]>`
-    SELECT id, title, content, author, photographer, tags, images, imageUrl, createdAt
-    FROM News 
+    SELECT id, title, content, author, photographer, tags, images, "imageUrl", "createdAt"
+    FROM "News" 
     WHERE id = ${id}
     LIMIT 1
   `;

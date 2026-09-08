@@ -36,9 +36,9 @@ export default async function Home() {
   const totalPages = Math.ceil(totalNews / NEWS_PER_PAGE);
 
   const latestNewsRaw = await prisma.$queryRaw<any[]>`
-    SELECT n.*, (SELECT COUNT(*) FROM Comment c WHERE c.newsId = n.id) as commentCount
-    FROM News n
-    ORDER BY n.createdAt DESC
+    SELECT n.*, (SELECT COUNT(*) FROM "Comment" c WHERE c."newsId" = n.id) as commentCount
+    FROM "News" n
+    ORDER BY n."createdAt" DESC
     LIMIT ${NEWS_PER_PAGE} OFFSET 0
   `;
   
