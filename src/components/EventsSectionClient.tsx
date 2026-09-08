@@ -101,7 +101,7 @@ export default function EventsSectionClient({ initialEvents, totalPages }: Event
             </div>
             <div className="event-divider"></div>
             <div className="event-meta">
-              <span>{new Date(event.date).toLocaleDateString('de-CH')}</span>
+              <span suppressHydrationWarning>{new Date(event.date).toLocaleDateString('de-CH')}</span>
               <span>VEREINSEVENT</span>
             </div>
             <div className="event-divider"></div>

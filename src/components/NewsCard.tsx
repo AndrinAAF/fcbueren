@@ -61,7 +61,7 @@ export default function NewsCard({ id, title, content, author, date, views, init
       <div className="news-content">
         <div className="news-header">
           <span>{author || 'Redaktion'}</span>
-          <span>{date}</span>
+          <span suppressHydrationWarning>{date}</span>
         </div>
         <div className="news-title" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>{title}</div>
         <div className="news-body" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
