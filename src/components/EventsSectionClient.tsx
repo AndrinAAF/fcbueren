@@ -1,17 +1,17 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import NewsCard from '@/components/NewsCard';
-import { getNewsPage } from '@/app/actions/news';
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { getEventsPage } from '@/app/actions/events';
 
-interface NewsSectionClientProps {
-  initialNews: any[];
+interface EventsSectionClientProps {
+  initialEvents: any[];
   totalPages: number;
 }
 
-export default function NewsSectionClient({ initialNews, totalPages }: NewsSectionClientProps) {
+export default function EventsSectionClient({ initialEvents, totalPages }: EventsSectionClientProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [news, setNews] = useState(initialNews);
+  const [events, setEvents] = useState(initialEvents);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isJumping, setIsJumping] = useState(false);
   const [slideDirection, setSlideDirection] = useState(0);
@@ -21,64 +21,54 @@ export default function NewsSectionClient({ initialNews, totalPages }: NewsSecti
   const handlePageChange = async (newPage: number) => {
     if (newPage < 1 || newPage > totalPages || newPage === currentPage || isAnimating) return;
     
-    setErrorMsg(''); // clear previous errors
+    setErrorMsg(''); 
     
-    // Scroll to the top of the news section so the user doesn't get lost
     if (containerRef.current) {
       const y = containerRef.current.getBoundingClientRect().top + window.scrollY - 100;
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
 
-    // Determine direction for slide animation
     const direction = newPage > currentPage ? 1 : -1;
     setSlideDirection(direction);
     setIsAnimating(true);
     
     try {
-      // Start fetching immediately
-      let fetchedNewsPromise;
+      let fetchedPromise;
       if (newPage === 1) {
-        fetchedNewsPromise = Promise.resolve(JSON.parse(JSON.stringify(initialNews)));
+        fetchedPromise = Promise.resolve(JSON.parse(JSON.stringify(initialEvents)));
       } else {
-        fetchedNewsPromise = getNewsPage(newPage);
+        fetchedPromise = getEventsPage(newPage);
       }
       
-      // Wait for both fetch AND fade-out animation (300ms) to complete
-      const [fetchedNews] = await Promise.all([
-        fetchedNewsPromise,
+      const [fetchedEvents] = await Promise.all([
+        fetchedPromise,
         new Promise(resolve => setTimeout(resolve, 300))
       ]);
       
-      // Ensure fetchedNews is always an array to prevent crashes
-      const safeNews = Array.isArray(fetchedNews) ? fetchedNews : [];
+      const safeEvents = Array.isArray(fetchedEvents) ? fetchedEvents : [];
       
-      if (safeNews.length === 0) {
-        setErrorMsg('Die Datenbank hat für diese Seite keine Beiträge zurückgegeben.');
+      if (safeEvents.length === 0) {
+        setErrorMsg('Die Datenbank hat für diese Seite keine Veranstaltungen zurückgegeben.');
       }
       
-      // Swap data
-      setNews(safeNews);
+      setEvents(safeEvents);
       setCurrentPage(newPage);
       
-      // Disable transition and jump to the opposite side instantly
       setIsJumping(true);
       setSlideDirection(direction * -1);
       
-      // Wait a tiny bit for the DOM to apply the jump without animation
       await new Promise(resolve => setTimeout(resolve, 30));
       
-      // Re-enable transition and animate in to center
       setIsJumping(false);
       setIsAnimating(false);
       
-      // After it slides in, reset the baseline transform
       setTimeout(() => {
         setSlideDirection(0);
       }, 300);
       
     } catch (error: any) {
-      console.error("Failed to fetch news page", error);
-      setErrorMsg("Fehler beim Laden der News: " + error?.message);
+      console.error("Failed to fetch events page", error);
+      setErrorMsg("Fehler beim Laden der Veranstaltungen: " + error?.message);
       setIsAnimating(false);
       setIsJumping(false);
       setSlideDirection(0);
@@ -93,43 +83,46 @@ export default function NewsSectionClient({ initialNews, totalPages }: NewsSecti
         </div>
       )}
       <div 
-        className="news-section"
+        className="events-grid"
         style={{ 
           opacity: isAnimating ? 0 : 1, 
           transform: isAnimating || isJumping ? (slideDirection === 1 ? 'translateX(-50px)' : (slideDirection === -1 ? 'translateX(50px)' : 'translateX(0)')) : 'translateX(0)',
           transition: isJumping ? 'none' : 'opacity 0.3s ease, transform 0.3s ease'
         }}
       >
-        {news && news.length > 0 ? news.map((item: any) => {
-          let dateStr = '';
-          try {
-            dateStr = item.createdAt ? new Date(item.createdAt).toLocaleDateString('de-CH', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '';
-          } catch (e) { dateStr = 'Ungültiges Datum'; }
-          
-          return (
-            <NewsCard 
-              key={item.id} 
-              id={item.id}
-              title={item.title || 'Ohne Titel'}
-              content={item.content || ''}
-              author={item.author || 'Redaktion'}
-              date={dateStr}
-              views={item.views || 0}
-              initialLikes={item.likes || 0}
-              imageUrl={item.imageUrl}
-              commentCount={Number(item.commentCount || 0)}
-            />
-          );
-        }) : (
+        {events.length > 0 ? events.map((event, index) => (
+          <div key={event.id} className="event-card animate-on-scroll" style={{ transitionDelay: `${index * 0.1}s` }}>
+            <div className="event-image">
+              {event.imageUrl ? (
+                <img src={event.imageUrl} alt={event.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              ) : (
+                <span>FC BÜREN</span>
+              )}
+            </div>
+            <div className="event-divider"></div>
+            <div className="event-meta">
+              <span>{new Date(event.date).toLocaleDateString('de-CH')}</span>
+              <span>VEREINSEVENT</span>
+            </div>
+            <div className="event-divider"></div>
+            <div className="event-body">
+              <h3 className="event-title" style={{ textTransform: 'uppercase', fontStyle: 'normal', color: 'var(--clr-primary)', fontWeight: 'bold' }}>{event.title}</h3>
+            </div>
+            <div className="event-divider"></div>
+            <div className="event-footer">
+              <Link href={`/events/${event.id}`} className="btn">Erfahre hier mehr</Link>
+            </div>
+          </div>
+        )) : (
           <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '2rem', background: 'var(--clr-bg-alt)', borderRadius: '8px' }}>
-            Aktuell gibt es keine News.
+            Aktuell sind keine speziellen Vereinsanlässe geplant.
           </div>
         )}
       </div>
 
       {/* Pagination */}
       {totalPages > 0 && (
-        <div className="pagination">
+        <div className="pagination" style={{ marginTop: '3rem' }}>
           <button 
             onClick={(e) => { e.preventDefault(); handlePageChange(1); }} 
             className="page-nav" 

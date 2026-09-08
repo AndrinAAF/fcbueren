@@ -4,9 +4,20 @@ import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import ScrollObserver from '@/components/ScrollObserver';
 import NewsSectionClient from '@/components/NewsSectionClient';
+import EventsSectionClient from '@/components/EventsSectionClient';
 
 export default async function Home() {
-  // Fetch latest 2 events
+  // Fetch latest events
+  const EVENTS_PER_PAGE = 3;
+  const totalEvents = await prisma.event.count({
+    where: {
+      date: {
+        gte: new Date()
+      }
+    }
+  });
+  const totalEventPages = Math.ceil(totalEvents / EVENTS_PER_PAGE);
+
   const upcomingEvents = await prisma.event.findMany({
     orderBy: { date: 'asc' },
     where: {
@@ -14,7 +25,7 @@ export default async function Home() {
         gte: new Date()
       }
     },
-    take: 2
+    take: EVENTS_PER_PAGE
   });
 
   // Fetch latest news
@@ -22,11 +33,19 @@ export default async function Home() {
   const totalNews = await prisma.news.count();
   const totalPages = Math.ceil(totalNews / NEWS_PER_PAGE);
 
-  const latestNews = await prisma.$queryRaw<any[]>`
-    SELECT * FROM News
-    ORDER BY createdAt DESC
+  const latestNewsRaw = await prisma.$queryRaw<any[]>`
+    SELECT n.*, (SELECT COUNT(*) FROM Comment c WHERE c.newsId = n.id) as commentCount
+    FROM News n
+    ORDER BY n.createdAt DESC
     LIMIT ${NEWS_PER_PAGE} OFFSET 0
   `;
+  
+  const latestNews = latestNewsRaw.map(news => ({
+    ...news,
+    commentCount: Number(news.commentCount || 0)
+  }));
+  
+  console.log("Debug commentCount in page.tsx:", latestNews.map(n => n.commentCount));
 
   return (
     <>
@@ -151,39 +170,8 @@ export default async function Home() {
           <p>Sei dabei an unseren kommenden Vereins-Events.</p>
         </div>
         
-        <div className="events-grid">
-          {upcomingEvents.length > 0 ? upcomingEvents.map((event, index) => (
-            <div key={event.id} className="event-card animate-on-scroll" style={{ transitionDelay: `${index * 0.1}s` }}>
-              <div className="event-image">
-                {event.imageUrl ? (
-                  <img src={event.imageUrl} alt={event.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                ) : (
-                  <span>FC BÜREN</span>
-                )}
-              </div>
-              <div className="event-divider"></div>
-              <div className="event-meta">
-                <span>{new Date(event.date).toLocaleDateString('de-CH')}</span>
-                <span>VEREINSEVENT</span>
-              </div>
-              <div className="event-divider"></div>
-              <div className="event-body">
-                <h3 className="event-title" style={{ textTransform: 'uppercase', fontStyle: 'normal', color: 'var(--clr-primary)', fontWeight: 'bold' }}>{event.title}</h3>
-              </div>
-              <div className="event-divider"></div>
-              <div className="event-footer">
-                {event.linkUrl ? (
-                  <a href={event.linkUrl} target="_blank" rel="noopener noreferrer" className="btn">Erfahre hier mehr</a>
-                ) : (
-                  <Link href="/news" className="btn">Erfahre hier mehr</Link>
-                )}
-              </div>
-            </div>
-          )) : (
-            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '2rem', background: 'var(--clr-bg-alt)', borderRadius: '8px' }}>
-              Aktuell sind keine speziellen Vereinsanlässe geplant.
-            </div>
-          )}
+        <div className="animate-on-scroll">
+          <EventsSectionClient initialEvents={upcomingEvents} totalPages={totalEventPages} />
         </div>
       </section>
 

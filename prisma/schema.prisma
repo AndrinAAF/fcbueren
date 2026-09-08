@@ -12,6 +12,8 @@ model Event {
   title       String
   date        DateTime
   description String?
+  content     String   @default("")
+  address     String?
   imageUrl    String?
   linkUrl     String?
   createdAt   DateTime @default(now())
@@ -29,8 +31,23 @@ model News {
   tags        String   @default("[]") // JSON string for tags
   views       Int      @default(0)
   likes       Int      @default(0)
+  comments    Comment[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Comment {
+  id          String   @id @default(cuid())
+  newsId      String
+  authorName  String
+  authorEmail String?
+  content     String
+  likes       Int      @default(0)
+  parentId    String?
+  parent      Comment? @relation("CommentToComment", fields: [parentId], references: [id], onDelete: Cascade)
+  replies     Comment[] @relation("CommentToComment")
+  createdAt   DateTime @default(now())
+  news        News     @relation(fields: [newsId], references: [id], onDelete: Cascade)
 }
 
 model Player {
