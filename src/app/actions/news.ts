@@ -109,11 +109,13 @@ export async function likeNews(newsId: string) {
 
 export async function unlikeComment(commentId: string) {
   try {
-    await prisma.$executeRaw`
-      UPDATE "Comment" 
-      SET likes = CASE WHEN likes > 0 THEN likes - 1 ELSE 0 END
-      WHERE id = ${commentId}
-    `;
+    const current = await prisma.comment.findUnique({ where: { id: commentId }, select: { likes: true } });
+    if (current && current.likes > 0) {
+      await prisma.comment.update({
+        where: { id: commentId },
+        data: { likes: { decrement: 1 } }
+      });
+    }
     return { success: true };
   } catch (error) {
     console.error('Failed to unlike comment:', error);
@@ -123,11 +125,13 @@ export async function unlikeComment(commentId: string) {
 
 export async function unlikeNews(newsId: string) {
   try {
-    await prisma.$executeRaw`
-      UPDATE "News" 
-      SET likes = CASE WHEN likes > 0 THEN likes - 1 ELSE 0 END
-      WHERE id = ${newsId}
-    `;
+    const current = await prisma.news.findUnique({ where: { id: newsId }, select: { likes: true } });
+    if (current && current.likes > 0) {
+      await prisma.news.update({
+        where: { id: newsId },
+        data: { likes: { decrement: 1 } }
+      });
+    }
     return { success: true };
   } catch (error) {
     console.error('Failed to unlike news:', error);
