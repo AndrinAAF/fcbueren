@@ -63,7 +63,7 @@ export default function Vereinsportrait() {
           <h1 style={{ color: 'var(--clr-primary)', fontStyle: 'italic', marginBottom: '1.5rem', fontWeight: 900, fontSize: 'clamp(3rem, 6vw, 4.5rem)' }}>Vereinsportrait</h1>
         </div>
         
-        <div className="animate-on-scroll portrait-content" style={{ background: 'var(--clr-surface)', padding: 'clamp(2rem, 5vw, 4rem)', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-sm)' }}>
+        <div className="portrait-content" style={{ background: 'var(--clr-surface)', padding: 'clamp(2rem, 5vw, 4rem)', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-sm)' }}>
           
           <div className="contact-info" style={{ marginBottom: '3rem', padding: '2rem', backgroundColor: 'var(--clr-background)', borderRadius: 'var(--radius-md)' }}>
             <h3 style={{ marginBottom: '1rem' }}>Fussballclub Büren an der Aare</h3>
