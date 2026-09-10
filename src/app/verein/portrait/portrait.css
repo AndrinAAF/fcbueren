@@ -1,139 +1,103 @@
-/* Timeline CSS */
+/* Simple Timeline CSS */
 
 .timeline-section {
   position: relative;
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
+  padding: 2rem 0;
 }
 
 .timeline {
   position: relative;
-  padding: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
-/* Vertical line */
+/* Vertical red line */
 .timeline::before {
   content: '';
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 20px;
-  width: 4px;
-  background: var(--clr-border, #e0e0e0);
-  border-radius: 4px;
+  left: 120px; /* Space for the date */
+  width: 2px;
+  background-color: var(--clr-primary, #e30613);
+  transform: translateX(-50%);
 }
 
 .timeline-item {
+  display: flex;
   position: relative;
-  margin-bottom: 3rem;
-  padding-left: 60px;
+  align-items: flex-start;
+  min-height: 40px;
 }
 
-.timeline-item:last-child {
-  margin-bottom: 0;
+.timeline-year {
+  width: 100px;
+  text-align: right;
+  padding-right: 20px;
+  font-weight: 600;
+  color: var(--clr-primary, #e30613);
+  flex-shrink: 0;
+  padding-top: 4px;
 }
 
 .timeline-marker {
   position: absolute;
-  left: 12px;
-  top: 6px;
-  width: 20px;
-  height: 20px;
+  left: 120px;
+  top: 8px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  background: var(--clr-primary, #e30613); /* FC Büren Rot */
-  border: 4px solid var(--clr-surface, #ffffff);
-  box-shadow: 0 0 0 2px var(--clr-primary, #e30613);
-  z-index: 1;
-}
-
-/* Dark mode support for timeline marker */
-[data-theme='dark'] .timeline-marker {
-  border-color: var(--clr-surface, #1e1e1e);
+  background-color: var(--clr-primary, #e30613);
+  transform: translateX(-50%);
+  z-index: 2;
 }
 
 .timeline-content {
-  background: var(--clr-background, #f9f9f9);
-  padding: 1.5rem;
-  border-radius: var(--radius-md, 8px);
-  box-shadow: var(--shadow-sm, 0 2px 4px rgba(0,0,0,0.05));
-  position: relative;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.timeline-content:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-md, 0 8px 16px rgba(0,0,0,0.1));
-}
-
-.timeline-year {
-  font-weight: 800;
-  font-size: 1.25rem;
-  color: var(--clr-primary, #e30613);
-  margin-bottom: 0.5rem;
+  padding-left: 20px;
+  flex-grow: 1;
+  background: transparent;
+  box-shadow: none;
 }
 
 .timeline-text {
   margin: 0;
-  line-height: 1.6;
+  line-height: 1.5;
   color: var(--clr-text, #333);
 }
 
-/* Responsive */
-@media (min-width: 768px) {
+[data-theme='dark'] .timeline-text {
+  color: #fff;
+}
+
+/* Responsive for very small screens */
+@media (max-width: 500px) {
   .timeline::before {
-    left: 50%;
-    transform: translateX(-50%);
+    left: 20px;
   }
   
   .timeline-item {
-    padding-left: 0;
-    width: 50%;
-    clear: both;
+    flex-direction: column;
   }
   
-  .timeline-item:nth-child(odd) {
-    float: left;
-    padding-right: 40px;
-    text-align: right;
-  }
-  
-  .timeline-item:nth-child(even) {
-    float: right;
-    padding-left: 40px;
+  .timeline-year {
+    width: auto;
     text-align: left;
+    padding-left: 40px;
+    padding-right: 0;
+    margin-bottom: 0.25rem;
+    padding-top: 0;
   }
   
   .timeline-marker {
-    left: 50%;
-    transform: translateX(-50%);
+    left: 20px;
+    top: 4px;
   }
   
-  /* Add an arrow to the cards */
-  .timeline-item:nth-child(odd) .timeline-content::after {
-    content: '';
-    position: absolute;
-    top: 10px;
-    right: -10px;
-    border-width: 10px 0 10px 10px;
-    border-style: solid;
-    border-color: transparent transparent transparent var(--clr-background, #f9f9f9);
+  .timeline-content {
+    padding-left: 40px;
   }
-  
-  .timeline-item:nth-child(even) .timeline-content::after {
-    content: '';
-    position: absolute;
-    top: 10px;
-    left: -10px;
-    border-width: 10px 10px 10px 0;
-    border-style: solid;
-    border-color: transparent var(--clr-background, #f9f9f9) transparent transparent;
-  }
-}
-
-/* Clearfix for floats */
-.timeline::after {
-  content: "";
-  display: table;
-  clear: both;
 }

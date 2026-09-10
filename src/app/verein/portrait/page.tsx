@@ -177,9 +177,9 @@ export default function Vereinsportrait() {
             <div className="timeline">
               {timelineData.map((item, index) => (
                 <div key={index} className="timeline-item">
+                  <div className="timeline-year">{item.year}</div>
                   <div className="timeline-marker"></div>
                   <div className="timeline-content">
-                    <div className="timeline-year">{item.year}</div>
                     <p className="timeline-text">{item.text}</p>
                   </div>
                 </div>
