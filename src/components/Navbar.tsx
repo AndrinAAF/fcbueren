@@ -91,7 +91,22 @@ export default function Navbar() {
               <Link href="/team/bueren-fg" onClick={closeMenu}>Büren F/G Junioren</Link>
             </div>
           </div>
-          <a href="#" onClick={closeMenu}>Verein</a>
+          <div className="nav-dropdown">
+            <span className="nav-dropdown-toggle" style={{ cursor: 'pointer' }}>
+              Verein ▾
+            </span>
+            <div className="nav-dropdown-menu">
+              <Link href="/verein/portrait" onClick={closeMenu}>Vereinsportrait</Link>
+              <Link href="/verein/vorstand" onClick={closeMenu}>Vorstand</Link>
+              <Link href="/verein/trainer" onClick={closeMenu}>Trainer</Link>
+              <Link href="/verein/funktionaere" onClick={closeMenu}>Funktionäre</Link>
+              <Link href="/verein/juniorenkommission" onClick={closeMenu}>Juniorenkommission</Link>
+              <Link href="/verein/chronik" onClick={closeMenu}>Chronik FC Büren a. A.</Link>
+              <Link href="/verein/matchzytig" onClick={closeMenu}>MatchZytig</Link>
+              <Link href="/verein/downloads" onClick={closeMenu}>Downloads</Link>
+              <Link href="/verein/partnerverein" onClick={closeMenu}>Partnerverein SR OLKA</Link>
+            </div>
+          </div>
           <a href="https://fcb.equiplab.ch/" target="_blank" rel="noopener noreferrer">Ausrüstung</a>
           <Link href="/kalender" className={pathname === '/kalender' ? 'active' : ''} onClick={closeMenu}>Kalender</Link>
           <Link href="/kontakt" className={pathname === '/kontakt' ? 'active' : ''} onClick={closeMenu}>Kontakt</Link>
